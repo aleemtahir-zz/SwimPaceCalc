@@ -1,0 +1,40 @@
+#swimCalc {
+  width: 650px;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 1.42857143;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05); }
+  #swimCalc .calcHead {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    background-color: #f5f5f5; }
+    #swimCalc .calcHead span {
+      font-weight: bolder;
+      font-style: italic; }
+  #swimCalc .calcBody {
+    border: 1px solid #ddd;
+    padding: 15px; }
+    #swimCalc .calcBody #length {
+      margin-bottom: 20px; }
+      #swimCalc .calcBody #length label {
+        font-weight: 700;
+        margin-bottom: 5px; }
+      #swimCalc .calcBody #length input[type=number] {
+        width: 100px;
+        margin: 5px 5px 5px 0; }
+      #swimCalc .calcBody #length #error {
+        color: red;
+        font-weight: bolder; }
+      #swimCalc .calcBody #length input[type=radio] {
+        font-weight: bolder;
+        margin-right: 5px; }
+    #swimCalc .calcBody #time label {
+      font-weight: bolder;
+      margin-bottom: 5px; }
+    #swimCalc .calcBody #time input[type=time] {
+      margin: 5px 5px 5px 0; }
+    #swimCalc .calcBody #time #datetimepicker3 {
+      max-width: 270px; }
+      #swimCalc .calcBody #time #datetimepicker3 input {
+        height: 30px; }

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Vue.js Simple Example</title>
+    <!--build:css css/styles.min.css-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css" />
+    <link rel="stylesheet" href="css/style.css">
+    <!--endbuild-->
+</head>
+
+  <body>
+    <div id="app" class="container-fluid">
+      <navbar 
+        :distance="form.distance"
+        :length-unit="form.unit"
+        :time="form.time"
+        :pace-meteric="form.result.pace.meteric"
+        :speed-meteric="form.result.speed.meteric"
+        :pace-imperial="form.result.pace.imperial"
+        :speed-imperial="form.result.speed.imperial"
+        :show-result="form.show"
+        @calculate="calculateResult"
+        @close="!show-result"
+      ></navbar>
+    </div>
+
+    <script type="text/x-template" id="navbar-template">
+        <div id="swimCalc" >
+          <div class="calcHead">
+            <span>Swimming Pace Calculator</span>
+          </div>
+          <div class="calcBody">
+              <div>
+                <p>The Swimming pace calculator can be used to calculate your swim pace in order to swim a given distance in a given time. </p>            
+              </div>
+              <div>
+                <p>For example if you want to swim 1000m in 15 minutes your pace would be 1:30 for each 100 Meters or 4Km per hour or 1:22 for each 100 yards or 2.5 Miles per hour</p>
+              </div>
+              <div id="length">
+                <label>Total Distance</label><br>
+                    <input type="number" v-model="distance" id="distance" v-on:change="$emit('calculate')">
+                <span id="error" >Error Message {{ distance }} {{ lengthUnit }} </span>
+                <div>
+                    <input type="radio" v-model="lengthUnit" value="Yards" name="unit" v-on:change="$emit('calculate')">Yards
+                    <input type="radio" v-model="lengthUnit" value="Meters" name="unit" v-on:change="$emit('calculate')">Meters
+                </div>
+              </div>
+              <div id="time">
+                <label>Time (hh:mm:ss)</label><br>
+                <div class="form-group">
+                  <div class='input-group date' id='datetimepicker3' v-on:change="$emit('calculate')">
+                      <input type='text' class="form-control" v-model="time" id="timeInput" />
+                      <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                      </span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class='input-group'>
+                  <button @click="$emit('calculate')" class="btn btn-success btn-xs">
+                      <span class="glyphicon glyphicon-cog"></span> Calculate</button>
+                </div>
+              </div>
+
+
+
+
+              <div v-show="showResult" id="CalcResults" style="padding-top: 20px;">
+                <div class="panel panel-primary" id="sbrresultspannel">
+                  <div class="panel-heading">Results <button @click="close" type="button" class="close" > <span aria-hidden="true">×</span><span class="sr-only">Close</span></button></div>
+                  <div class="panel-body">
+                    <p>To swim <strong> {{ distance }} {{ lengthUnit }} </strong> in <strong>{{ time }} </strong> your pace and speed are as follows</p>
+                    <div class="table-responsive">
+                      <table class="table table-striped table-condensed">
+                        <tbody>
+                          <tr>
+                            <th></th>
+                            <th>Pace</th>
+                            <th>Speed</th>
+                          </tr>
+                          <tr>
+                            <th>Metric</th>
+                            <td><strong>{{ paceMeteric }}</strong> per 100m</td>
+                            <td> <strong>{{ speedMeteric }}</strong> Km/hour </td>
+                          </tr>
+                          <tr>
+                            <th>Imperial</th>
+                            <td><strong>{{ paceImperial }}</strong> per 100yrd</td>
+                            <td> <strong>{{ speedImperial }}</strong> Mile/hour </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+        </div>
+
+    </script>
+
+
+    <!--build:js js/main.min.js -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/locale/en-au.js"></script> 
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="js/script.js"></script>
+    <!-- endbuild -->
+    <script>
+
+ 
+      // Navbar component
+      Vue.component('navbar', {
+        template: '#navbar-template',
+        props:["distance","lengthUnit","time","paceMeteric","paceImperial","speedMeteric","speedImperial","showResult"]
+      });
+
+      // Create a root instance
+      new Vue({
+        el: '#app',
+        data: {
+          form: {
+            distance: 1000,
+            unit: "Meters",
+            time: "19:15:00",
+            result:{
+              pace:{
+                meteric: "2:00",
+                imperial: "2:34"
+              },
+              speed:{
+                meteric: "0.5",
+                imperial: "1.3"
+              }
+            },
+            show: false
+          }
+        },
+        methods:{
+          calculateResult: function (event) {
+            var distance = $('#distance').val();
+            var time = $('#timeInput').val();
+            var unit = $("input[name='unit']:checked").val();
+            
+            // `this` inside methods points to the Vue instance
+            this.form.show = true;
+            this.form.distance = distance;
+            this.form.time = time;
+            this.form.unit = unit;
+
+            if(unit !== 'Meters')
+              distance = distance*0.9144; //convert yards to meters
+            
+            //convert timeinto seconds
+            seconds = time.split(':').reduce((acc,time) => (60 * acc) + +time);
+            
+            var paceMeteric   = seconds/distance * 100;
+            var speedMeteric  = (distance / 1000) / (seconds / 3600);
+            var paceImperial  = seconds/distance * 100 * 0.9144;
+            var speedImperial  = (distance / 1609.34) / (seconds / 3600);
+            
+            //convert seconds into time
+            this.form.result.pace.meteric = this.secondsTimeSpanToHMS(paceMeteric);
+            this.form.result.pace.imperial = this.secondsTimeSpanToHMS(paceImperial);
+            this.form.result.speed.meteric = Number.parseFloat(speedMeteric).toPrecision(1);
+            this.form.result.speed.imperial = Number.parseFloat(speedImperial).toPrecision(1);
+
+            
+          },
+          secondsTimeSpanToHMS: function (s) {
+              var h = Math.floor(s/3600); //Get whole hours
+              s -= h*3600;
+              var m = Math.floor(s/60); //Get remaining minutes
+              s -= m*60;
+              s = Math.round(s);
+              return h+":"+(m < 10 ? '0'+m : m)+":"+(s < 10 ? '0'+s : s); //zero padding on minutes and seconds
+          },
+          closeResult: function(){
+            this.form.show = false;
+          }
+        }
+      });
+    </script>
+  </body>
+  <!-- linear-gradient(to right, green 35%, yellow 30%, yellow 68%, red 40%) -->
+</html>

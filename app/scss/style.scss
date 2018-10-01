@@ -1,0 +1,71 @@
+// Base Colors
+$shade-10: rgb(26, 56, 75) !default;
+$shade-1: #f5f5f5 !default;
+$border: #ddd !default;
+$colour: rgb(19, 121, 189) !default;
+
+#swimCalc{
+  // margin: 10px auto;
+  width: 650px;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 1.42857143;
+  box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  .calcHead{
+    border: 1px solid $border;
+    padding: 10px;
+    text-align: center;
+    background-color: $shade-1;
+    & span{
+      font-weight: bolder;
+      font-style: italic;
+    }
+  }
+  .calcBody{
+    border: 1px solid $border;
+    padding: 15px;
+
+    & #length{
+      margin-bottom: 20px;
+
+      & label{
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+  
+      & input[type=number]{
+        width:100px;
+        margin: 5px 5px 5px 0;
+      }
+  
+      & #error{
+        color: red;
+        font-weight: bolder;
+      }
+  
+      & input[type=radio]{
+        font-weight: bolder;
+        margin-right: 5px;
+      }
+    }
+
+    & #time{
+      & label{
+        font-weight: bolder;
+        margin-bottom: 5px;
+      }
+
+      & input[type=time]{
+        margin: 5px 5px 5px 0;
+      }
+
+      & #datetimepicker3{
+        max-width: 270px;
+        & input{
+          height: 30px;
+        }
+      }
+    }
+
+  }
+}
