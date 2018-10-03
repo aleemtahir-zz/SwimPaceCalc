@@ -24,7 +24,12 @@ $colour: rgb(19, 121, 189) !default;
   .calcBody{
     border: 1px solid $border;
     padding: 15px;
-
+    & .button-info{
+      color: #337ab7;
+      &:hover{
+        color: black;
+      }
+    }
     & #length{
       margin-bottom: 20px;
 
@@ -66,6 +71,8 @@ $colour: rgb(19, 121, 189) !default;
         }
       }
     }
-
+    & #close-sign{
+      float: right;
+    }
   }
 }

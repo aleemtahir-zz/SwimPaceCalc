@@ -15,6 +15,10 @@
   #swimCalc .calcBody {
     border: 1px solid #ddd;
     padding: 15px; }
+    #swimCalc .calcBody .button-info {
+      color: #337ab7; }
+      #swimCalc .calcBody .button-info:hover {
+        color: black; }
     #swimCalc .calcBody #length {
       margin-bottom: 20px; }
       #swimCalc .calcBody #length label {
@@ -38,3 +42,5 @@
       max-width: 270px; }
       #swimCalc .calcBody #time #datetimepicker3 input {
         height: 30px; }
+    #swimCalc .calcBody #close-sign {
+      float: right; }

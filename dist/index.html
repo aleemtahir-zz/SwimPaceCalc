@@ -5,174 +5,115 @@
     <title>Vue.js Simple Example</title>
     <link rel="stylesheet" href="css/styles.min.css">
 </head>
-  <style>
-    body {
-      font : 100% Helvetica, sans-serif;
-      /* background-color: #34495e; */
-    }
-    .container {
-      margin: 0 auto;
-      padding-top: 70px;
-    }
-    #top-header{
-        border: 1px solid #eee;
-        height: 100%;
-    }
-    #left-head {
-        vertical-align: center;  
-        padding: 72px;
-        line-height: 2em;
-    }
-    #right-head {
-        background-color: green;
-        padding: 0 ;
-        width: 90px;
-        height: 90px;
-    }
-    
-  </style>
+
   <body>
     <div id="app" class="container-fluid">
-      <navbar></navbar>
-      <top-header></top-header>
-      <!-- <rangeslider></rangeslider> -->
-      <roundslider
-        v-for="label in labels"
-        v-bind:key="label.index" 
-        :pre-label="label.pre"
-        :post-label="label.post"
-        :hr="label.hr"
-        :default-val="label.value"
-      ></roundslider>
-
+      <navbar 
+        :distance="form.distance"
+        :length-unit="form.unit"
+        :time="form.time"
+        :pace-meteric="form.result.pace.meteric"
+        :speed-meteric="form.result.speed.meteric"
+        :pace-imperial="form.result.pace.imperial"
+        :speed-imperial="form.result.speed.imperial"
+        :show-result="form.show"
+        :show-example="form.showExample"
+        @calculate="calculateResult"
+        @expand="expandExample"        
+        @close="closeResult"
+      ></navbar>
     </div>
 
     <script type="text/x-template" id="navbar-template">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">
-                <!-- <i class="fas fa-bars"></i> -->
-                <img src="https://www.yourfertility.org.au/themes/custom/yourfertility/assets/img/logo.png" alt="fertility">
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-              <ul class="navbar-nav">
-                <li class="nav-item active">
-                  <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Features</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Pricing</a>
-                </li>
-              </ul>
-            </div>
-          </nav>
-    </script>
+        <div id="swimCalc" >
+          <div class="calcHead">
+            <span>Swimming Pace Calculator</span>
+          </div>
+          <div class="calcBody">
+              <div>
+                <p>The Swimming pace calculator can be used to calculate your swim pace in order to swim a given distance in a given time.
+                  <a @click="$emit('expand')" href="#">
+                    <span class="button-info glyphicon glyphicon-question-sign"></span>
+                  </a>
+                </p>            
+              </div>
+              <div v-show="showExample">
+                <p>For example if you want to swim 1000m in 15 minutes your pace would be 1:30 for each 100 Meters or 4Km per hour or 1:22 for each 100 yards or 2.5 Miles per hour</p>
+              </div>
+              <div id="length">
+                <label>Total Distance</label><br>
+                    <input type="number" v-model="distance" id="distance" v-on:change="$emit('calculate')">
+                <!-- <span id="error" >Error Message {{ distance }} {{ lengthUnit }} </span> -->
+                <div>
+                    <input type="radio" v-model="lengthUnit" value="Yards" name="unit" v-on:change="$emit('calculate')"><strong>Yards</strong>
+                    <input type="radio" v-model="lengthUnit" value="Meters" name="unit" v-on:change="$emit('calculate')"><strong>Meters</strong>
+                </div>
+              </div>
+              <div id="time">
+                <label>Time (hh:mm:ss)</label><br>
+                <div class="form-group">
+                  <div class='input-group date' id='datetimepicker3' v-on:change="$emit('calculate')">
+                      <input type='text' class="form-control" v-model="time" id="timeInput" />
+                      <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                      </span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class='input-group'>
+                  <button @click="$emit('calculate')" class="btn btn-success btn-xs">
+                      <span class="glyphicon glyphicon-cog"></span> Calculate</button>
+                </div>
+              </div>
 
-    <script type="text/x-template" id="header-template" >
-        <div id="top-header" class="row">
-            <div id="left-head" class="col-md-6">
-                <h1>Healthy conception tool</h1>
-                <p>This tool is designed to help individuals and couples think about everyday factors that might increase your chances of becoming pregnant, and having a healthy baby. This tool is designed for both men and women – because sperm and egg health are equally important.</p>
-            </div>
-            <div id="right-head" class="col-md-6">
-                <img width="100%"  src="https://www.yourfertility.org.au/sites/default/files/2018-09/icon3-banner_0.jpg" alt="icon">
-            </div>
+
+
+
+              <div v-show="showResult" id="CalcResults" style="padding-top: 20px;">
+                <div class="panel panel-primary" id="sbrresultspannel">
+                  <div class="panel-heading">Results 
+                    <a id="close-sign" href="#" @click="$emit('close')">
+                        <span class="button-info glyphicon glyphicon-remove">
+                    </a>
+                  </div>
+                  <div class="panel-body">
+                    <p>To swim <strong> {{ distance }} {{ lengthUnit }} </strong> in <strong>{{ time }} </strong> your pace and speed are as follows</p>
+                    <div class="table-responsive">
+                      <table class="table table-striped table-condensed">
+                        <tbody>
+                          <tr>
+                            <th></th>
+                            <th>Pace</th>
+                            <th>Speed</th>
+                          </tr>
+                          <tr>
+                            <th>Metric</th>
+                            <td><strong>{{ paceMeteric }}</strong> per 100m</td>
+                            <td> <strong>{{ speedMeteric }}</strong> Km/hour </td>
+                          </tr>
+                          <tr>
+                            <th>Imperial</th>
+                            <td><strong>{{ paceImperial }}</strong> per 100yrd</td>
+                            <td> <strong>{{ speedImperial }}</strong> Mile/hour </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+
         </div>
+
     </script>
 
-    <script type="text/x-template" id="range-template">
-      <div class="range-slider">
-        <input class="range-slider__range" type="range" value="100" min="0" max="500">
-        <span class="range-slider__value">0</span>
-      </div>
-    </script>
-
-    <script type="text/x-template" id="roundslider-template">
-      <div class="container roundslider">
-        <div class="row">
-            <div class="col-md-2 label">
-              <p>{{ preLabel }}</p>
-            </div>
-            <div class="col-md-6 range-slider">
-                <input type="range" min="1" max="100" v-model="defaultVal" step="1" class="round-slider" id="roundslider">
-                
-            </div>
-            <div class="col-md-4 value block-inline ">
-                <input type="text" v-model="defaultVal">
-                <p><span> {{ postLabel }}</span></p>
-            </div>
-        </div>
-        <hr v-show="hr">
-      </div>
-      }
-    </script>
 
     <script src="js/main.min.js"></script>
     <script>
 
-      // Range component
-      Vue.component('rangeslider', {
-        template: '#range-template',
-        data: function () {
-          return {
-            msg: 'Welcome to Vue.js World!'
-          }
-        }
-      });
-      Vue.component('roundslider', {
-        props: ['preLabel', 'postLabel','hr',"defaultVal"],
-        template: '#roundslider-template',
-        data: function () {
-          return {
-            msg: 'Welcome to Vue.js World!'
-          }
-        }
-      });
-
-      // Navbar component
-      Vue.component('navbar', {
-        template: '#navbar-template'
-      });
-      //Header component
-      Vue.component('top-header',{
-        template: '#header-template',
-        data: function () {
-          return {
-            divH: 100
-          }
-        }
-      });
-
-      // Create a root instance
-      new Vue({
-        el: '#app',
-        data: {
-          labels:[
-            {
-              pre: 'Your Age',
-              post: 'year old',
-              value: 18,
-              hr: true
-            },
-            {
-              pre: 'Your Height',
-              post: 'cm',
-              value: 50,
-              hr:false
-            },
-            {
-              pre: 'Your Weight',
-              post: 'kg',
-              value: 71,
-              hr: false
-            }
-          ]
-        }
-      });
+      
     </script>
   </body>
   <!-- linear-gradient(to right, green 35%, yellow 30%, yellow 68%, red 40%) -->
